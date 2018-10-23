@@ -9,6 +9,8 @@ trait BoardComponent extends BasicBoardComponent {
     def getStartPos: Int
     def getEndPos: Int
 
+    def getParticipatingCells = List(getStartPos, getEndPos)
+
     def isStart(value: Int) = getStartPos == value
     def isEnd(value: Int) = getEndPos == value
 }

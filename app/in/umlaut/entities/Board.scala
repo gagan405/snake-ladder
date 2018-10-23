@@ -1,5 +1,7 @@
 package in.umlaut.entities
 
+import scala.collection.immutable.IntMap
+
 case class Cell(number: Int, boardComponents: List[BoardComponent] = List())
 
 class Board(val height: Int,
@@ -7,6 +9,7 @@ class Board(val height: Int,
             val ladders: List[Ladder],
             val snakes: List[Snake]) {
 
+  val idxComponents = getIndexComponentMap
   val board = getBoardMatrix
 
   ladders.zipWithIndex.foreach(x => setEntity(x._1, x._2 + 1))
@@ -21,6 +24,21 @@ class Board(val height: Int,
       } else {
           (row, startPos - length * row - 1)
       }
+  }
+
+  private def getIndexComponentMap : IntMap[List[BoardComponent]] = {
+    val ladderIdx = buildIndexedMapForComponents(ladders)
+    val snakeIdx = buildIndexedMapForComponents(snakes)
+
+    ladderIdx.unionWith(snakeIdx, (_, av, bv:List[BoardComponent]) => av ++ bv)
+  }
+
+  private def buildIndexedMapForComponents(boardComponents: List[BoardComponent]) = {
+    IntMap(boardComponents
+      .flatMap(l => l.getParticipatingCells.map(x => (x, l)))
+      .groupBy(_._1)
+      .mapValues(_.map(_._2))
+      .map(p => (p._1, p._2)).toSeq: _*)
   }
 
   private def setEntity(entity: BoardComponent, idx: Int) = {
@@ -46,6 +64,11 @@ class Board(val height: Int,
       else  x._1
     })
     board
+  }
+
+  private def getBoardMatrix1 = {
+    (1 to length * height).map(x => Cell(x, idxComponents.getOrElse(x, List())))
+      .toList
   }
 }
 
