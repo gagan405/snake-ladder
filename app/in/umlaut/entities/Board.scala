@@ -2,8 +2,6 @@ package in.umlaut.entities
 
 import scala.collection.immutable.IntMap
 
-case class Cell(number: Int, boardComponents: List[BoardComponent] = List())
-
 class Board(val height: Int,
             val length: Int,
             val ladders: List[Ladder],

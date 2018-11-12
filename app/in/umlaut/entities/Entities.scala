@@ -34,3 +34,6 @@ case class Snake(startPos: Int, endPos: Int) extends BoardComponent {
 case class Player(name: String) extends BasicBoardComponent {
     val character = 'P'
 }
+
+case class Cell(number: Int, boardComponents: List[BoardComponent] = List()) {
+}
