@@ -15,6 +15,8 @@ class Board(val height: Int,
 
   def getBoard = new Board(height, length, ladders, snakes)
 
+  def getMaxIdx = height * length
+
   def getRowColFromIdx(startPos: Int) = {
       val row = (startPos -1)/ length
       if (row % 2 == 1) {
@@ -22,6 +24,10 @@ class Board(val height: Int,
       } else {
           (row, startPos - length * row - 1)
       }
+  }
+
+  def getComponentsAtPos(pos: Int) = {
+    getIndexComponentMap.get(pos)
   }
 
   private def getIndexComponentMap : IntMap[List[BoardComponent]] = {
@@ -75,8 +81,27 @@ object Board {
   val STANDARD_BOARD = standardBoard
 
   private def standardBoard = {
-    val ladders = List(Ladder(5,29), Ladder(13, 54), Ladder(31, 98))
-    val snakes = List(Snake(45, 2), Snake(97, 47))
+    val ladders = List(Ladder(2,19),
+      Ladder(7, 28),
+      Ladder(23, 84),
+      Ladder(31, 52),
+      Ladder(37, 56),
+      Ladder(42, 64),
+      Ladder(54, 69),
+      Ladder(70, 88),
+      Ladder(80, 83),
+      Ladder(87, 93)
+    )
+    val snakes = List(Snake(45, 5),
+      Snake(97, 47),
+      Snake(25, 16),
+      Snake(39, 17),
+      Snake(44, 27),
+      Snake(61, 36),
+      Snake(66, 46),
+      Snake(89, 40),
+      Snake(94, 63)
+    )
     new Board(10, 10, ladders, snakes)
   }
 

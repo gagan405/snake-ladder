@@ -18,7 +18,12 @@ class GameController @Inject()(cc: ControllerComponents) extends AbstractControl
         val players = List(Player("Hagga"), Player("Tatti"))
         val game = new Game(board, players)
         games += (game.gameId.toString -> game)
-        Ok(game.gameId.toString)
+        val sb = StringBuilder.newBuilder
+        sb.append("Game started with players Hagga and Tatti").append('\n')
+            .append("Game ID: ").append(game.gameId.toString)
+            .append('\n')
+            .append(Board.printBoard(board))
+        Ok(sb.toString)
     }
 
     def printBoard = Action {
