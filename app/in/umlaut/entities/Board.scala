@@ -69,11 +69,6 @@ class Board(val height: Int,
     })
     board
   }
-
-  private def getBoardMatrix1 = {
-    (1 to length * height).map(x => Cell(x, idxComponents.getOrElse(x, List())))
-      .toList
-  }
 }
 
 object Board {

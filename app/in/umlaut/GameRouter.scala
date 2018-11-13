@@ -1,6 +1,5 @@
 package in.umlaut
 
-import controllers.GameController
 import javax.inject.{Inject, Singleton}
 import play.api.routing.Router.Routes
 import play.api.routing.SimpleRouter
@@ -12,9 +11,7 @@ class GameRouter @Inject()(controller: GameController) extends SimpleRouter {
   override def routes: Routes = {
     case POST(p"/$id/roll") =>
       controller.roll(id)
-    case GET(p"/board") =>
-      controller.printBoard
-    case GET(p"/start") =>
+    case POST(p"/start") =>
       controller.startGame
   }
 

@@ -1,5 +1,7 @@
 package in.umlaut.entities
 
+import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue}
+
 
 trait BasicBoardComponent {
     def character: Char
@@ -35,5 +37,18 @@ case class Player(name: String) extends BasicBoardComponent {
     val character = 'P'
 }
 
-case class Cell(number: Int, boardComponents: List[BoardComponent] = List()) {
+case class Players(players: List[Player])
+
+object Players {
+    implicit object PlayersFormat extends Format[Players] {
+        // convert from JSON string to a Stock object (de-serializing from JSON)
+        def reads(json: JsValue): JsResult[Players] = {
+            val p = (json \ "players").as[List[String]]
+            JsSuccess(Players(p.map(x => Player(x))))
+        }
+
+        def writes(s: Players): JsValue = {
+            throw new UnsupportedOperationException("Not implemented yet!")
+        }
+    }
 }

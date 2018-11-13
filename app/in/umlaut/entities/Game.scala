@@ -26,11 +26,14 @@ class Game(val board: Board, players: List[Player]) {
         } else newPos
     }
 
-    def roll(): String = {
+    /**
+      *The below isnt really object-oriented!
+      */
+    def roll(): GameStatus = {
         val sb = StringBuilder.newBuilder
         val player = indexedPlayers.get(currentPlayer).get
 
-        sb.append("Rolling for player ").append(currentPlayer).append('\n')
+        sb.append("Rolling for player ").append(player.name).append('\n')
 
         val diceRead = 1 + Random.nextInt(6)
         sb.append("Dice reads ").append(diceRead).append('\n')
@@ -39,11 +42,13 @@ class Game(val board: Board, players: List[Player]) {
         val newPos = oldPos + diceRead
 
         if(newPos > playBoard.getMaxIdx) {
+            updatePlayer
             sb.append("Tough luck. Player stays as it is.").append('\n')
-            return sb.toString()
+            return GameStatus(sb.toString(), false)
         } else if(newPos == playBoard.getMaxIdx) {
-            return sb.append("Player ").append(player.name).append(" wins!!").append('\n')
+            val status = sb.append("Player ").append(player.name).append(" wins!!").append('\n')
               .append(Board.printBoard(playBoard)).toString()
+            return GameStatus(status, true)
         }
 
         sb.append("Player moves to ").append(newPos).append('\n')
@@ -67,14 +72,11 @@ class Game(val board: Board, players: List[Player]) {
           .append(playerMoves(currentPlayer).mkString("-->"))
           .append('\n')
 
-        sb.append(Board.printBoard(playBoard))
         updatePlayer
-        sb.toString()
+        sb.append(Board.printBoard(playBoard))
+        GameStatus(sb.toString(), false)
     }
 
-    /**
-      *The below isnt really object-oriented!
-      */
     private def setPlayerInPosition(player: Player, newPos: Int) = {
         val (row, col) = board.getRowColFromIdx(newPos)
         playBoard.board(row)(col) = playBoard.board(row)(col) + '\n' + player.character + currentPlayer + " " + player.name
@@ -90,3 +92,5 @@ class Game(val board: Board, players: List[Player]) {
         currentPlayer = if (currentPlayer == players.size - 1) 0 else currentPlayer + 1
     }
 }
+
+case class GameStatus(gameUpdates: String, isFinished:Boolean)
